@@ -23,8 +23,8 @@ In this implementation, default results are successful.
 In addition to main implementation, some common helper methods are added.
 There are two groups of helpers:
 
-- Errors conversions: Methods `ToError()` an `ToError<T>()` allows convert an error result to a
-different error result. These allow methods that receive an error, return it to the caller.
+- Errors conversions: Methods `ToError()` an `ToError<T>()` allows convert an error of a result type to a
+different result type. These allow methods that receive an error, return it to the caller using shorter code.
 Conversion examples:
 
 ``` C#
