@@ -2,7 +2,7 @@
 
 There are some libraries that implement this monad,
 but most used functionality requires an extremely short code,
-so we can avoid implement it aourself.
+so we can avoid import a library and implement it ourself.
 
 This is a short implementation example. Relevant design decisions:
 
