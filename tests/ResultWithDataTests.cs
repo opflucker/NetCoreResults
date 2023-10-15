@@ -20,7 +20,7 @@ public class ResultWithDataTests
     }
 
     [Fact]
-    public void When_convert_failure_result_is_failure()
+    public void When_convert_failure_then_result_is_failure()
     {
         var failureInt = Result<int>.Failure();
         var failure = failureInt.ToError();

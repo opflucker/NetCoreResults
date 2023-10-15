@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Asuming a solution with a well-defined presentation layer
+
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace NetResultMonad.Tests.WithWeb;
 
 public static class ResultExtensions
 {
+    // This is a common helper that allows fluent-style use of results
     public static Result<V> OnSuccess<V>(this Result result, Func<Result<V>> action)
     {
         if (result.IsFailure)
@@ -13,6 +16,7 @@ public static class ResultExtensions
         return action();
     }
 
+    // This is a common helper for web-applications that handle result monads
     public static IActionResult ToActionResult<T>(this Result<T> result)
     {
         if (result.IsSuccess)
@@ -34,9 +38,9 @@ public static class ResultExtensions
     }
 }
 
-public static class OtherService
+public static class SomePresentationLayerService
 {
-    public static Result GetAuthorization(string requesterName)
+    public static Result EnsureAuthorization(string requesterName)
     {
         return requesterName == "AUTHORIZED-USER"
             ? Result.Success()
@@ -44,11 +48,12 @@ public static class OtherService
     }
 }
 
-public static class WebLayer
+public static class PresentationLayer
 {
+    // This method represents an action-method of some web controller
     public static IActionResult GetEntity(string requesterName, string id)
     {
-        return OtherService.GetAuthorization(requesterName)
+        return SomePresentationLayerService.EnsureAuthorization(requesterName)
             .OnSuccess(() => SomeApplicationService.FindById(id))
             .ToActionResult();
     }

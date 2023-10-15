@@ -1,4 +1,6 @@
-﻿namespace NetResultMonad.Tests.WithWeb;
+﻿// Asuming a solution with a well-defined domain layer, with its own errors and services
+
+namespace NetResultMonad.Tests.WithWeb;
 
 public class DomainError : Error
 {
