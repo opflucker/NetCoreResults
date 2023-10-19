@@ -55,6 +55,7 @@ For example, a division method:
     }
 ```
 
-Methods `ToError()` an `ToError<T>()` introduce a potencial invalid use 
-that can not be enforced at compile time,
-so it is enforced at execution time with exception `InvalidResultUseException`.
+Methods `ToError()` an `ToError<T>()` introduce a potencial invalid use
+that can not be enforced at compile time: When used with a successful result.
+This use corresponds to a program bug, so it is signaled at execution time
+throwing exception `InvalidResultUseException`.
