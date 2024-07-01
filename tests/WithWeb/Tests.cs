@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace NetResultMonad.Tests.WithWeb;
+namespace NetResults.Tests.WithWeb;
 
 public class Tests
 {
