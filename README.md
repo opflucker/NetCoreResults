@@ -6,56 +6,18 @@ so we can avoid import a library and implement it ourself.
 
 This is a short implementation example. Relevant design decisions:
 
-- Use of result monad as a return type must be efficient, so structs are used.
-As a consequence, `Result<T>` can not derive from `Result`.
+- `Result` types are implemented with classes. Structs are more efficient but their mandatory default constructors not always can create a valid result.
 
-- Result an error concepts are separated.
-Error information is specific to each project.
-A real implementation could use just one Error type
-or many derived error types, one per library, per layer, etc.
-If only one error type is needed, it could be defined as struct
-but it must be nullable (an boxed, loosing efficiency)
-or add an additional flag in result types (loosing efficiency in all cases, not only on error results).
+- `Result` are expected to be created only when returning from a method, so this is the only implemented mechanism.
 
-- Because structs are used, default constructors can not be hidden.
-In this implementation, default results are successful.
+There are some groups of methods in `Result` types:
 
-In addition to main implementation, some common helper methods are added.
-There are two groups of helpers:
+- Getters: Properties `Data` an `Error`. Because it is not secure client code use them only after proper validation, 
+they introduce a potencial invalid use that can not be avoided at compile time.
+This use corresponds to a program bug, so it is signaled at execution time throwing exception `InvalidOperationException`.
 
-- Errors conversions: Methods `ToError()` an `ToError<T>()` allows convert an error of a result type to a
-different result type. These allow methods that receive an error, return it to the caller using shorter code.
-Conversion examples:
+- Simple validations: Methods `IsSuccess()` an `IsFailure()`.
 
-``` C#
-    Result<int> failureInt = Result<int>.Failure();
-    Result failure = failureInt.ToError(); // Result<A> => Result
-    Result<SomeEntity> = failureInt.ToError<SomeEntity>(); // Result<A> => Result<B>
-    Result<double> failureDouble = failure.ToError<double>(); // Result => Result<A>
-```
+- Validations with extractions: Methods `IsSuccess(out TData data)` an `IsFailure(out TError error)`. Allow secure access to result data.
 
-- Implicit casts: Methods `operator Result` and `operator Result<T>` allow shorter and more readable codes.
-For example, a division method:
-
-``` C#
-    // without implicit casts
-    Result<int> Divide(int a, int b)
-    {
-        if (b == 0)
-            return Result<int>.Failure();
-        return Result.Success(a / b);
-    }
-
-    // with implicit casts
-    Result<int> Divide(int a, int b)
-    {
-        if (b == 0)
-            return Error.Unit;
-        return a / b;
-    }
-```
-
-Methods `ToError()` an `ToError<T>()` introduce a potencial invalid use
-that can not be avoided at compile time: When used with a successful result.
-This use corresponds to a program bug, so it is signaled at execution time
-throwing exception `InvalidResultUseException`.
+- Continuations: Methods `OnSuccess`, `OnFailure` and `On`.

@@ -3,48 +3,39 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace NetResultMonad.Tests.WithWeb;
+namespace NetResults.Tests.WithWeb;
 
 public static class ResultExtensions
 {
-    // This is a common helper that allows fluent-style use of results
-    public static Result<V> OnSuccess<V>(this Result result, Func<Result<V>> action)
-    {
-        if (result.IsFailure)
-            return result.ToError<V>();
-
-        return action();
-    }
-
     // This is a common helper for web-applications that handle result monads
-    public static IActionResult ToActionResult<T>(this Result<T> result)
+    public static IActionResult ToActionResult<TData>(this Result<TData,ApplicationError> result)
+        where TData : notnull
     {
-        if (result.IsSuccess)
-            return new OkObjectResult(result.Data);
-
-        switch (result.Error)
-        {
-            case ApplicationError error:
-                switch (error.Code)
+        return result
+            .On<IActionResult>(
+                v => new OkObjectResult(v),
+                error =>
                 {
-                    case ApplicationError.Codes.BadRequest:
-                        return new BadRequestObjectResult(error.Message);
-                    default:
-                        return new UnprocessableEntityObjectResult(error.Message);
-                }
-            default:
-                return new ObjectResult(result.Error) { StatusCode = (int)HttpStatusCode.InternalServerError };
-        }
+                    switch (error.Code)
+                    {
+                        case ApplicationError.Codes.BadRequest:
+                            return new BadRequestObjectResult(error.Message);
+                        case ApplicationError.Codes.NotAuthorized:
+                            return new ObjectResult(result.Error) { StatusCode = (int)HttpStatusCode.InternalServerError };
+                        default:
+                            return new UnprocessableEntityObjectResult(error.Message);
+                    }
+                });
     }
 }
 
 public static class SomePresentationLayerService
 {
-    public static Result EnsureAuthorization(string requesterName)
+    public static Result<ApplicationError> EnsureAuthorization(string requesterName)
     {
         return requesterName == "AUTHORIZED-USER"
             ? Result.Success()
-            : Result.Failure();
+            : ApplicationError.NotAuthorized;
     }
 }
 
@@ -54,7 +45,7 @@ public static class PresentationLayer
     public static IActionResult GetEntity(string requesterName, string id)
     {
         return SomePresentationLayerService.EnsureAuthorization(requesterName)
-            .OnSuccess(() => SomeApplicationService.FindById(id))
+            .On(() => SomeApplicationService.FindById(id))
             .ToActionResult();
     }
 }

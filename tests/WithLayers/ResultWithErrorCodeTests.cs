@@ -1,7 +1,9 @@
-﻿namespace NetResultMonad.Tests;
+﻿using NetResults;
+
+namespace NetResult.Tests.WithLayers;
 
 // Asuming a solution with a well-defined domain layer, with its own errors
-public class DomainError : Error
+public class DomainError
 {
     public enum Codes
     {
@@ -21,7 +23,7 @@ public class DomainError : Error
 }
 
 // And an application layer, with additional errors that are application related, not domain related
-public class ApplicationError : Error
+public class ApplicationError
 {
     public enum Codes
     {
@@ -41,6 +43,7 @@ public class ApplicationError : Error
 
     public static ApplicationError Generic(string message) => new(Codes.Generic, message);
     public static readonly ApplicationError InvalidCommand = new(Codes.InvalidCommand, null);
+    public static ApplicationError From(DomainError domainError) => new(Codes.Generic, $"Domain error {domainError.Code}");
 }
 
 public class ResultWithErrorCodeTests
@@ -50,43 +53,45 @@ public class ResultWithErrorCodeTests
     {
         var id = "VALID";
         var result = SomeApplicationLayerMethod(id);
-        Assert.True(result.IsSuccess);
-        Assert.Equal(id, result.Data!.Id);
+        Assert.True(result.IsSuccess());
+        if (result.IsSuccess(out var value))
+            Assert.Equal(id, value.Id);
     }
 
     [Fact]
     public void When_call_with_null_id_then_result_is_failed()
     {
         var result = SomeApplicationLayerMethod(null);
-        Assert.True(result.IsFailure);
-        Assert.IsType<ApplicationError>(result.Error);
+        Assert.True(result.IsFailure());
+        if (result.IsFailure(out var error))
+            Assert.IsType<ApplicationError>(error);
     }
 
     [Fact]
     public void When_call_with_invalid_id_then_result_is_failed()
     {
         var result = SomeApplicationLayerMethod("INVALID");
-        Assert.True(result.IsFailure);
-        Assert.IsType<DomainError>(result.Error);
+        Assert.True(result.IsFailure());
+        if (result.IsFailure(out var error))
+            Assert.IsType<ApplicationError>(error);
     }
 
     // Assuming this method belongs to a service in application layer
-    private static Result<SomeApplicationModel> SomeApplicationLayerMethod(string? id)
+    private static Result<SomeApplicationModel, ApplicationError> SomeApplicationLayerMethod(string? id)
     {
         if (id == null)
             return ApplicationError.InvalidCommand; // application layer returns its own errors
 
-        var result = SomeDomainMethod(id);
-        if (result.IsFailure)
-            return result.ToError<SomeApplicationModel>(); // or can pass received errors from other layers, like domain
-
-        return new SomeApplicationModel(result.Data!.Id); // and map a received model to its own model
+        return SomeDomainMethod(id)
+            .On<SomeApplicationModel, ApplicationError>(
+                value => new SomeApplicationModel(value.Id), // and map a received model to its own model
+                ApplicationError.From); // or can pass received errors from other layers, like domain
     }
 
     private record SomeApplicationModel(string Id);
 
     // And this method belongs to a service in domain layer
-    private static Result<SomeDomainModel> SomeDomainMethod(string id)
+    private static Result<SomeDomainModel, DomainError> SomeDomainMethod(string id)
     {
         if (id == "INVALID")
             return DomainError.InvalidAction;

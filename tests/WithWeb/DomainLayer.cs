@@ -1,8 +1,8 @@
 ﻿// Asuming a solution with a well-defined domain layer, with its own errors and services
 
-namespace NetResultMonad.Tests.WithWeb;
+namespace NetResults.Tests.WithWeb;
 
-public class DomainError : Error
+public class DomainError
 {
     public enum Codes
     {
@@ -23,7 +23,7 @@ public record class SomeEntity(string Id);
 
 public static class SomeDomainService
 {
-    public static Result<SomeEntity> GetById(string id)
+    public static Result<SomeEntity, DomainError> GetById(string id)
     {
         if (id == "ID-NOT-FOUND")
             return DomainError.EntityNotFound;
