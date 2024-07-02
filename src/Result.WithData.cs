@@ -1,4 +1,5 @@
-﻿using static NetResults.Result;
+﻿using System.Diagnostics.CodeAnalysis;
+using static NetResults.Result;
 
 namespace NetResults;
 
@@ -19,8 +20,8 @@ public sealed class Result<TData, TError>
     private readonly TData? data;
     private readonly TError? error;
 
-    public TData Data => success ? data! : throw new InvalidOperationException();
-    public TError Error => !success ? error! : throw new InvalidOperationException();
+    public TData Data => IsSuccess() ? data : throw new InvalidOperationException();
+    public TError Error => IsFailure() ? error : throw new InvalidOperationException();
 
     private Result(bool success, TData? data, TError? error)
     {
@@ -35,14 +36,19 @@ public sealed class Result<TData, TError>
     public static implicit operator Result<TData, TError>(SuccessData<TData> result) => new(true, result.Data, default);
     public static implicit operator Result<TData, TError>(FailureError<TError> result) => new(false, default, result.Error);
 
+    [MemberNotNullWhen(returnValue: true, nameof(data))]
+    [MemberNotNullWhen(returnValue: false, nameof(error))]
     public bool IsSuccess() => success;
+
+    [MemberNotNullWhen(returnValue: true, nameof(error))]
+    [MemberNotNullWhen(returnValue: false, nameof(data))]
     public bool IsFailure() => !success;
 
     public bool IsSuccess(out TData data)
     {
-        if (success)
+        if (IsSuccess())
         {
-            data = this.data!;
+            data = this.data;
             return true;
         }
 
@@ -52,9 +58,9 @@ public sealed class Result<TData, TError>
 
     public bool IsFailure(out TError error)
     {
-        if (!success)
+        if (IsFailure())
         {
-            error = this.error!;
+            error = this.error;
             return true;
         }
 
@@ -64,46 +70,46 @@ public sealed class Result<TData, TError>
 
     public Result<TData, TError> OnSuccess(Action<TData> action)
     {
-        if (success)
-            action(data!);
+        if (IsSuccess())
+            action(data);
         return this;
     }
 
     public Result<TData, TError> OnFailure(Action<TError> action)
     {
-        if (!success)
-            action(error!);
+        if (IsFailure())
+            action(error);
         return this;
     }
 
     public Result<TData2, TError> OnSuccess<TData2>(Func<TData, Result<TData2, TError>> func)
         where TData2 : notnull
     {
-        if (success)
-            return func(data!);
-        return error!;
+        if (IsSuccess())
+            return func(data);
+        return error;
     }
 
     public Result<TData2, TError2> On<TData2, TError2>(Func<TData, Result<TData2, TError2>> successFunc, Func<TError, TError2> failureFunc)
         where TData2 : notnull
         where TError2 : notnull
     {
-        if (success)
-            return successFunc(data!);
-        return failureFunc(error!);
+        if (IsSuccess())
+            return successFunc(data);
+        return failureFunc(error);
     }
 
     public T On<T>(Func<TData, T> successFunc, Func<TError, T> failureFunc)
     {
-        if (success)
-            return successFunc(data!);
-        return failureFunc(error!);
+        if (IsSuccess())
+            return successFunc(data);
+        return failureFunc(error);
     }
 
     public Result<TError> Narrow()
     {
-        if (!success)
-            return error!;
+        if (IsFailure())
+            return error;
         return Success();
     }
 }
