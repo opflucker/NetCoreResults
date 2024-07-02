@@ -1,4 +1,5 @@
-﻿using static NetResults.Result;
+﻿using System.Diagnostics.CodeAnalysis;
+using static NetResults.Result;
 
 namespace NetResults;
 
@@ -37,14 +38,17 @@ public sealed class Result<TError>
     public static implicit operator Result<TError>(SuccessNoData _) => successSingleton;
     public static implicit operator Result<TError>(TError error) => new(error);
 
+    [MemberNotNullWhen(returnValue: false, nameof(error))]
     public bool IsSuccess() => success;
+
+    [MemberNotNullWhen(returnValue: true, nameof(error))]
     public bool IsFailure() => !success;
 
     public bool IsFailure(out TError error)
     {
-        if (!success)
+        if (IsFailure())
         {
-            error = this.error!;
+            error = this.error;
             return true;
         }
 
@@ -54,14 +58,14 @@ public sealed class Result<TError>
 
     public Result<TError> OnFailure(Action<TError> action)
     {
-        if (!success)
-            action(error!);
+        if (IsFailure())
+            action(error);
         return this;
     }
 
     public Result<TError> OnSuccess(Func<Result<TError>> func)
     {
-        if (success)
+        if (IsSuccess())
             return func();
         return this;
     }
@@ -69,16 +73,16 @@ public sealed class Result<TError>
     public Result<TError2> On<TError2>(Func<Result<TError2>> successFunc, Func<TError, TError2> failureFunc)
         where TError2 : notnull
     {
-        if (success)
+        if (IsSuccess())
             return successFunc();
-        return failureFunc(error!);
+        return failureFunc(error);
     }
 
     public T On<T>(Func<T> successFunc, Func<TError, T> failureFunc)
     {
-        if (success)
+        if (IsSuccess())
             return successFunc();
-        return failureFunc(error!);
+        return failureFunc(error);
     }
 }
 
@@ -87,5 +91,5 @@ public static class ResultExtensions
     public static Result<TData, TError> On<TData, TError>(this Result<TError> result, Func<Result<TData, TError>> successFunc)
         where TData : notnull
         where TError : notnull
-        => result.IsFailure(out var error) ? error! : successFunc();
+        => result.IsFailure(out var error) ? error : successFunc();
 }
