@@ -9,6 +9,7 @@ public static class ResultExtensions
 {
     // This is a common helper for web-applications that handle result monads
     public static IActionResult ToActionResult<TData>(this Result<TData,ApplicationError> result)
+        where TData : notnull
     {
         return result
             .On<IActionResult>(
@@ -33,7 +34,7 @@ public static class SomePresentationLayerService
     public static Result<ApplicationError> EnsureAuthorization(string requesterName)
     {
         return requesterName == "AUTHORIZED-USER"
-            ? Result.Success
+            ? Result.Success.Unit
             : ApplicationError.NotAuthorized;
     }
 }
