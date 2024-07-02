@@ -4,11 +4,13 @@ namespace NetResults;
 
 public static partial class Result
 {
-    public sealed class Success
+    public sealed class SuccessNoData
     {
-        private Success() {}
-        public static readonly Success Unit = new();
+        private SuccessNoData() {}
+        public static readonly SuccessNoData Unit = new();
     }
+
+    public static SuccessNoData Success() => SuccessNoData.Unit;
 }
 
 public sealed class Result<TError>
@@ -32,7 +34,7 @@ public sealed class Result<TError>
     }
 
     private static readonly Result<TError> successSingleton = new();
-    public static implicit operator Result<TError>(Success _) => successSingleton;
+    public static implicit operator Result<TError>(SuccessNoData _) => successSingleton;
     public static implicit operator Result<TError>(TError error) => new(error);
 
     public bool IsSuccess() => success;

@@ -34,7 +34,7 @@ public static class SomePresentationLayerService
     public static Result<ApplicationError> EnsureAuthorization(string requesterName)
     {
         return requesterName == "AUTHORIZED-USER"
-            ? Result.Success.Unit
+            ? Result.Success()
             : ApplicationError.NotAuthorized;
     }
 }

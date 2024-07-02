@@ -1,9 +1,14 @@
-﻿namespace NetResults;
+﻿using static NetResults.Result;
+
+namespace NetResults;
 
 public static partial class Result
 {
-    public record Success<T>(T Data);
-    public record Failure<T>(T Error);
+    public record SuccessData<TData>(TData Data);
+    public record FailureError<TError>(TError Error);
+
+    public static SuccessData<TData> Success<TData>(TData data) => new(data);
+    public static FailureError<TError> Failure<TError>(TError error) => new(error);
 }
 
 public sealed class Result<TData, TError>
@@ -27,8 +32,8 @@ public sealed class Result<TData, TError>
     public static implicit operator Result<TData, TError>(TData data) => new(true, data, default);
     public static implicit operator Result<TData, TError>(TError error) => new(false, default, error);
 
-    public static implicit operator Result<TData, TError>(Result.Success<TData> result) => new(true, result.Data, default);
-    public static implicit operator Result<TData, TError>(Result.Failure<TError> result) => new(false, default, result.Error);
+    public static implicit operator Result<TData, TError>(SuccessData<TData> result) => new(true, result.Data, default);
+    public static implicit operator Result<TData, TError>(FailureError<TError> result) => new(false, default, result.Error);
 
     public bool IsSuccess() => success;
     public bool IsFailure() => !success;
@@ -99,6 +104,6 @@ public sealed class Result<TData, TError>
     {
         if (!success)
             return error!;
-        return Result.Success.Unit;
+        return Success();
     }
 }

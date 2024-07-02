@@ -7,7 +7,7 @@ public class StringErrorTests
     [Fact]
     public void When_initialize_with_success_then_result_is_success()
     {
-        Result<string> result = Result.Success.Unit;
+        Result<string> result = Result.Success();
         Assert.True(result.IsSuccess());
         Assert.False(result.IsFailure());
         Assert.Throws<InvalidOperationException>(() => result.Error);
