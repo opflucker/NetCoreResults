@@ -5,8 +5,8 @@ namespace NetResults;
 
 public static partial class Result
 {
-    public record SuccessData<TData>(TData Data);
-    public record FailureError<TError>(TError Error);
+    public record struct SuccessData<TData>(TData Data);
+    public record struct FailureError<TError>(TError Error);
 
     public static SuccessData<TData> Success<TData>(TData data) => new(data);
     public static FailureError<TError> Failure<TError>(TError error) => new(error);
