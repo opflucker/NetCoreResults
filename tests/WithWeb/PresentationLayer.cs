@@ -45,7 +45,7 @@ public static class PresentationLayer
     public static IActionResult GetEntity(string requesterName, string id)
     {
         return SomePresentationLayerService.EnsureAuthorization(requesterName)
-            .On(() => SomeApplicationService.FindById(id))
+            .On(() => SomeApplicationService.FindById(id), error => error)
             .ToActionResult();
     }
 }

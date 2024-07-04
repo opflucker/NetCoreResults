@@ -82,10 +82,11 @@ public class ResultWithErrorCodeTests
         if (id == null)
             return ApplicationError.InvalidCommand; // application layer returns its own errors
 
-        return SomeDomainMethod(id)
-            .On<SomeApplicationModel, ApplicationError>(
-                value => new SomeApplicationModel(value.Id), // and map a received model to its own model
-                ApplicationError.From); // or can pass received errors from other layers, like domain
+        var result = SomeDomainMethod(id);
+        if (result.IsFailure(out var error))
+            return ApplicationError.From(error); // map received errors from other layers, like domain
+
+        return new SomeApplicationModel(result.Data.Id); // map a received model to its own model
     }
 
     private record SomeApplicationModel(string Id);
