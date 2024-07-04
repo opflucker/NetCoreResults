@@ -122,4 +122,7 @@ This use case corresponds to a program bug, so it is signaled at execution time 
 - Validations with extractions: Methods `IsSuccess(out TData data)` an `IsFailure(out TError error)`.
 Allow secure access to result internal data.
 
-- Continuations: Methods `OnSuccess`, `OnFailure`, `On` and `Narrow`.
+- Continuations:
+  - Methods `On`, `OnSuccess` and `OnFailure`: Allow perform and action when result is success or failure without modifying the result.
+  - Methods `Map`, `MapSuccess` and `MapFailure`: Allow perform a function producing a new result, potentially of a new type.
+  - Method `TrimSuccess`: Creates an equivalent `Result<TError>` from a `Result<TData,TResult>`.
