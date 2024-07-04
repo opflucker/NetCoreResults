@@ -24,10 +24,10 @@ public class StringErrorTests
         Assert.Equal(data, result.Data);
         Assert.Throws<InvalidOperationException>(() => result.Error);
 
-        var narrowedResult = result.Narrow();
-        Assert.True(narrowedResult.IsSuccess());
-        Assert.False(narrowedResult.IsFailure());
-        Assert.Throws<InvalidOperationException>(() => narrowedResult.Error);
+        var trimmedResult = result.TrimSuccess();
+        Assert.True(trimmedResult.IsSuccess());
+        Assert.False(trimmedResult.IsFailure());
+        Assert.Throws<InvalidOperationException>(() => trimmedResult.Error);
     }
 
     [Fact]
@@ -50,9 +50,9 @@ public class StringErrorTests
         Assert.Throws<InvalidOperationException>(() => result.Data);
         Assert.Equal(error, result.Error);
 
-        var narrowedResult = result.Narrow();
-        Assert.False(narrowedResult.IsSuccess());
-        Assert.True(narrowedResult.IsFailure());
-        Assert.Equal(error, narrowedResult.Error);
+        var trimmedResult = result.TrimSuccess();
+        Assert.False(trimmedResult.IsSuccess());
+        Assert.True(trimmedResult.IsFailure());
+        Assert.Equal(error, trimmedResult.Error);
     }
 }

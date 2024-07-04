@@ -9,7 +9,7 @@ public sealed class Failure<TError> : Result<TError>
     public override bool IsFailure() => true;
     public override bool IsFailure(out TError error) { error = this.error; return true; }
     public override Result<TError> On(Action successAction, Action<TError> failureAction) { failureAction(error); return this; }
-    public override T On<T>(Func<T> successFunc, Func<TError, T> failureFunc) => failureFunc(error);
+    public override T Map<T>(Func<T> successFunc, Func<TError, T> failureFunc) => failureFunc(error);
 }
 
 public sealed class Failure<TData, TError> : Result<TData, TError>
@@ -23,5 +23,5 @@ public sealed class Failure<TData, TError> : Result<TData, TError>
     public override bool IsSuccess(out TData data) { data = default!; return false; }
     public override bool IsFailure(out TError error) { error = this.error; return true; }
     public override Result<TData, TError> On(Action<TData> successAction, Action<TError> failureAction) { failureAction(error); return this; }
-    public override T On<T>(Func<TData, T> successFunc, Func<TError, T> failureFunc) => failureFunc(error);
+    public override T Map<T>(Func<TData, T> successFunc, Func<TError, T> failureFunc) => failureFunc(error);
 }

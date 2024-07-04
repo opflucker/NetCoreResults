@@ -85,9 +85,7 @@ record Error(ErrorCodes Code, string Message);
 
 Result<Error> SomeBusinessLogic(string? entityId)
 	=> UpdateEntity(entityId)
-		.On<ErrorCodes, Error>(
-			_ => Result.Success(),
-			errorCode => new Error(code, "Failed to update entity"));
+		.MapFailure(errorCode => new Error(code, "Failed to update entity"));
 ```
 
 ## Working with `Result<TData,TError>`

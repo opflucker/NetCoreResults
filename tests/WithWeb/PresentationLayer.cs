@@ -12,7 +12,7 @@ public static class ResultExtensions
         where TData : notnull
     {
         return result
-            .On<IActionResult>(
+            .Map<IActionResult>(
                 v => new OkObjectResult(v),
                 error =>
                 {
@@ -45,7 +45,7 @@ public static class PresentationLayer
     public static IActionResult GetEntity(string requesterName, string id)
     {
         return SomePresentationLayerService.EnsureAuthorization(requesterName)
-            .On(() => SomeApplicationService.FindById(id), error => error)
+            .MapSuccess(() => SomeApplicationService.FindById(id))
             .ToActionResult();
     }
 }
