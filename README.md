@@ -84,7 +84,8 @@ record Error(ErrorCodes Code, string Message);
 
 Result<Error> SomeBusinessLogic(string? entityId)
 	=> UpdateEntity(entityId)
-		.On<Error>(_ => Result.Success(),
+		.On<ErrorCodes, Error>(
+			_ => Result.Success(),
 			errorCode => new Error(code, "Failed to update entity"));
 ```
 
@@ -114,12 +115,12 @@ Result<Entity,ErrorCodes> UpdateEntity(string? id)
 
 There are some groups of methods in types `Result<TError>` and `Result<TData,TError>`:
 
-- Getters: Properties `Data` and `Error`. They introduce a potencial invalid use that can not be avoided at compile time.
-This use corresponds to a program bug, so it is signaled at execution time throwing exception `InvalidOperationException`.
+- Getters: Properties `Data` and `Error`. They introduce a potencial invalid use case that can not be avoided at compile time.
+This use case corresponds to a program bug, so it is signaled at execution time throwing exception `InvalidOperationException`.
 
 - Simple validations: Methods `IsSuccess()` and `IsFailure()`.
 
 - Validations with extractions: Methods `IsSuccess(out TData data)` an `IsFailure(out TError error)`.
-  Allow secure access to result internal data.
+Allow secure access to result internal data.
 
-- Continuations: Methods `OnSuccess`, `OnFailure` and `On`.
+- Continuations: Methods `OnSuccess`, `OnFailure`, `On` and `Narrow`.
