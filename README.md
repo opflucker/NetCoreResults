@@ -3,12 +3,13 @@
 ## Introduction
 
 There are some libraries that implement this monad,
-but mostly required functionallity is extremely short,
+but common used functionallity is extremely short,
 so we can avoid import a library and implement it ourself.
+This is an short implementation example.
 
-This is a short implementation example. Relevant design decisions:
+Relevant design decisions:
 
-- `Result` are expected to be created only when returning from a method, so this is the only mechanism implemented.
+- `Result` objects are expected to be created when returning from a method, so this is implemented using implicit cast operators.
 
 - `Result` types are implemented with classes.
   Structs are more efficient but their mandatory default constructors can create invalid results.
@@ -19,15 +20,15 @@ This is a short implementation example. Relevant design decisions:
 
 There are 3 Result types:
 
-- Static `Result`, holding types and methods for helping create result objects in two corner cases:
+- `Result<TError>`: Represents a result without success data, only error data.
+- `Result<TData,TError>`: Represents a result with success and error data.
+- `Result`: Hold helper types and methods for creating result objects in two corner cases:
   - A success `Result<TError>`.
   - A `Result<TData,TError>` when `TData = TError`.
-- `Result<TError>`, representing a result without success data, only error data.
-- `Result<TData,TError>`, representing a result with success and error data.
 
 ## Working with `Result<TError>`
 
-Following code shows a method that returns a result:
+Following code shows a method that returns a `Result` object:
 
 ```c#
 enum ErrorCodes { InvalidArgument, EntityNotFound }
@@ -47,7 +48,7 @@ Result<ErrorCodes> UpdateEntity(string? id)
 }
 ```
 
-Following code shows a method that received a result:
+Following code shows a method that receive a `Result` object:
 
 ```c#
 record Error(ErrorCodes Code, string Message);
@@ -62,7 +63,7 @@ Result<Error> SomeBusinessLogic(string? entityId)
 }
 ```
 
-Use of getter `Error` can produce an exception is called with a success result. A more secure alternative is:
+Use of getter `Error` can produce an exception if it is called with a success `Result`. A more secure alternative is:
 
 ```c#
 record Error(ErrorCodes Code, string Message);
