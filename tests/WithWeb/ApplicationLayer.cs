@@ -35,7 +35,7 @@ public static class SomeApplicationService
 
         var result = SomeDomainService.GetById(id);
 
-        return result.OnFailure<SomeEntity, DomainError, ApplicationError>(
+        return result.MapFailure<SomeEntity, DomainError, ApplicationError>(
             _ => ApplicationError.Generic);
     }
 }

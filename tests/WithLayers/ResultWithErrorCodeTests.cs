@@ -22,6 +22,8 @@ public class DomainError
     public static readonly DomainError InvalidAction = new(Codes.InvalidAction);
 }
 
+record SomeDomainModel(string Id);
+
 // And an application layer, with additional errors that are application related, not domain related
 public class ApplicationError
 {
@@ -45,6 +47,9 @@ public class ApplicationError
     public static readonly ApplicationError InvalidCommand = new(Codes.InvalidCommand, null);
     public static ApplicationError From(DomainError domainError) => new(Codes.Generic, $"Domain error {domainError.Code}");
 }
+
+record SomeApplicationModel(string Id);
+
 
 public class ResultWithErrorCodeTests
 {
@@ -89,8 +94,6 @@ public class ResultWithErrorCodeTests
         return new SomeApplicationModel(result.Data.Id); // map a received model to its own model
     }
 
-    private record SomeApplicationModel(string Id);
-
     // And this method belongs to a service in domain layer
     private static Result<SomeDomainModel, DomainError> SomeDomainMethod(string id)
     {
@@ -99,6 +102,4 @@ public class ResultWithErrorCodeTests
 
         return new SomeDomainModel(id);
     }
-
-    private record SomeDomainModel(string Id);
 }
