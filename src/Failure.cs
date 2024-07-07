@@ -1,4 +1,4 @@
-﻿namespace NetResults;
+﻿namespace NetCoreResults;
 
 public sealed class Failure<TError> : Result<TError>
 {

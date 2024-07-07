@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\NetResults.csproj" />
+    <ProjectReference Include="..\src\NetCoreResults.csproj" />
   </ItemGroup>
 
 </Project>

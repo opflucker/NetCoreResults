@@ -1,4 +1,4 @@
-﻿namespace NetResults;
+﻿namespace NetCoreResults;
 
 public static partial class ResultExtensions
 {

@@ -1,6 +1,4 @@
-﻿using NetResults;
-
-namespace NetResult.Tests.NoData;
+﻿namespace NetCoreResults.Tests.NoData;
 
 public class MapTests
 {

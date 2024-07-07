@@ -1,6 +1,6 @@
 ﻿// Asuming a solution with a well-defined domain layer, with its own errors and services
 
-namespace NetResults.Tests.WithWeb;
+namespace NetCoreResults.Tests.WithWeb;
 
 public class DomainError
 {
