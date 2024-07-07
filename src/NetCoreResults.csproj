@@ -16,6 +16,7 @@
     <PackageProjectUrl>https://github.com/opflucker/NetCoreResults</PackageProjectUrl>
     <Copyright>MIT</Copyright>
     <Description>A simple result monad implementation.</Description>
+    <PackageTags>functional csharp dotnet dotnetcore monad result result-type functional-programming</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
