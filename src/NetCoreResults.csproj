@@ -15,8 +15,9 @@
     <ProjectUrl>https://github.com/opflucker/NetResultMonad</ProjectUrl>
     <PackageProjectUrl>https://github.com/opflucker/NetCoreResults</PackageProjectUrl>
     <Copyright>MIT</Copyright>
-    <Description>A simple result monad implementation.</Description>
+    <Description>Simple result monad implementation.</Description>
     <PackageTags>functional csharp dotnet dotnetcore monad result result-type functional-programming</PackageTags>
+    <PackageReleaseNotes>Changed target framework to netstandard2.1 so it can be used within more projects.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
