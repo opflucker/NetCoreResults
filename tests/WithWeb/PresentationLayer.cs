@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace NetResults.Tests.WithWeb;
+namespace NetCoreResults.Tests.WithWeb;
 
 public static class ResultExtensions
 {

@@ -2,14 +2,12 @@
 
 ## Introduction
 
-There are some libraries that implement this monad,
-but common used functionallity is extremely short,
-so we can avoid import a library and implement it ourself.
-This is an short implementation example.
+Simple implementation of result monad.
 
 Relevant design decisions:
 
-- `Result` objects are expected to be created when returning from a method, so this is implemented using implicit cast operators.
+- `Result` objects are expected to be created when returning from a method, 
+  so this is the main creation mechanism and it is implemented using implicit cast operators.
 
 - `Result` types are implemented with classes.
   Structs are more efficient but their mandatory default constructors can create invalid results.

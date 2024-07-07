@@ -1,6 +1,4 @@
-﻿using NetResults;
-
-namespace NetResult.Tests.WithData;
+﻿namespace NetCoreResults.Tests.WithData;
 
 public class IntDataIntErrorTests
 {

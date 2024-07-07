@@ -1,6 +1,4 @@
-﻿using NetResults;
-
-namespace NetResult.Tests.WithLayers;
+﻿namespace NetCoreResults.Tests.WithLayers;
 
 // Asuming a solution with a well-defined domain layer, with its own errors
 public class DomainError
