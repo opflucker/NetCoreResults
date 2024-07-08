@@ -8,16 +8,16 @@
 
   <PropertyGroup>
     <PackageId>NetCoreResults</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>Otto Pflücker</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <ProjectUrl>https://github.com/opflucker/NetResultMonad</ProjectUrl>
     <PackageProjectUrl>https://github.com/opflucker/NetCoreResults</PackageProjectUrl>
     <Copyright>MIT</Copyright>
-    <Description>Simple result monad implementation.</Description>
+    <Description>Minimal result monad implementation.</Description>
     <PackageTags>functional csharp dotnet dotnetcore monad result result-type functional-programming</PackageTags>
-    <PackageReleaseNotes>Changed target framework to netstandard2.1 so it can be used within more projects.</PackageReleaseNotes>
+    <PackageReleaseNotes>Improved README.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

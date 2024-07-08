@@ -1,18 +1,36 @@
-# Simple Result Monad Implementation
+# Minimal Result Monad Implementation
 
 ## Introduction
 
-Simple implementation of result monad.
+Minimal implementation of result monad, it is:
+
+- Minimal implementation code: Short but effective, holding the minimal required data, without using any conditional, easy to read and understand, with less change to bugs.
+- Minimal client boilerplate code: Less verbose and noisy, easy to read and understand, with less change to bugs.
 
 Relevant design decisions:
 
-- `Result` objects are expected to be created when returning from a method, 
-  so this is the main creation mechanism and it is implemented using implicit cast operators.
+- Result types are implemented with classes:
+Chosen minimalism over efficiency. Structs are more efficient but introduce important limitations:
+  - Structs have no inheritance, so the current design (classes Result, Success and Failure) can not be used.
+Use of inheritance allows a cleaner and shorter code, without using any conditional, and enable the use of 
+cast operator overloads that reduce client boilerplate code. Using an interface (like IResult) will allow 
+to use structs for types Success and Failure, but interfaces do not support cast operation overloads.
 
-- `Result` types are implemented with classes.
-  Structs are more efficient but their mandatory default constructors can create invalid results.
+- Some use cases are not implemented because they do not add significant advantages. In particular:
+  - A result without success or failure data: This use case can be well covered returning a simple boolean.
+  - A result with only success data: This use case can be well covered returning a nullable value.
+  - A result with a typed set of errors (like Result<TData, TError1, TError2>): It overcomplicates implementation,
+it forces to support different error set sizes (for 3, 4 and more errors), it introduce more client boilerplate code 
+(because this large type declaration should be propagated along call stack) and it can be well covered using 
+a more appropiate error type.
+  - A result that holds internally a collection of errors (like ReadOnlyCollection<E> in type Result<E>): 
+It overcomplicates implementation and it can be well covered using Result<ReadOnlyCollection<E>> when really needed.
+  - A result with a default error type (like string): Any default type potentially assumes behaviours not needed 
+by client code. Remember, this is a minimal implementation.
 
-- Any type can be used to represent errors.
+- Any type can be used to represent errors: Results not only do not need to assume any behaviour about error types 
+(the only justification for introducing a base error class) but also errors are concepts that belongs to client code 
+domain, not result library domain.
 
 ## Result types
 

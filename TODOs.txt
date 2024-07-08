@@ -1,0 +1,22 @@
+---------------------------------------------
+
+Future changes:
+
+- Add Try(...) methods for calling code that can produce a value or an exception, and map them to a Result.
+  Possible signatures:
+    Result<D,Exception> Result.Try(Func<D> func);
+    Result<D,E> Result.Try(Func<D> func, Func<Exception,E> mapException);
+    Result<D2,E> Result<D1,E>.Try(Func<D1,D2> func, Func<Exception,E> mapException);
+
+- Add SuccessIf(...) methods for calling a predicate and map the false to an error.
+  Possible signature:
+    Result<E> Result.SuccessIf(Pred pred, E error);
+    Result<D,E> Result<D1,E>.SuccessIf(Pred<D> pred, E error);
+
+- Add implicit overload to boolean, so client code can perform:
+    var result = ...;
+	if (result) ...
+
+- Add support for asyn delegates.
+
+- Success and Failure can be inner classes.
