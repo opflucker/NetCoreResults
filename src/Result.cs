@@ -1,31 +1,24 @@
 ﻿namespace NetCoreResults;
 
-public abstract class Result<TError>
+public static class Result
 {
-    public abstract TError Error { get; }
-    public abstract bool IsSuccess();
-    public abstract bool IsFailure();
-    public abstract bool IsFailure(out TError error);
-    public abstract Result<TError> On(Action successAction, Action<TError> failureAction);
-    public abstract T Map<T>(Func<T> successFunc, Func<TError, T> failureFunc);
+    #region No Success Data
 
-    public static implicit operator Result<TError>(Result.SuccessNoData _) => Success<TError>.Unit;
-    public static implicit operator Result<TError>(TError error) => new Failure<TError>(error);
-}
+    public sealed class SuccessNoData
+    {
+        private SuccessNoData() { }
+        public static readonly SuccessNoData Unit = new();
+    }
+    public static SuccessNoData Success() => SuccessNoData.Unit;
 
-public abstract class Result<TData, TError>
-{
-    public abstract TData Data { get; }
-    public abstract TError Error { get; }
-    public abstract bool IsSuccess();
-    public abstract bool IsFailure();
-    public abstract bool IsSuccess(out TData data);
-    public abstract bool IsFailure(out TError error);
-    public abstract Result<TData, TError> On(Action<TData> successAction, Action<TError> failureAction);
-    public abstract T Map<T>(Func<TData, T> successFunc, Func<TError, T> failureFunc);
+    #endregion
 
-    public static implicit operator Result<TData, TError>(TData data) => new Success<TData, TError>(data);
-    public static implicit operator Result<TData, TError>(TError error) => new Failure<TData, TError>(error);
-    public static implicit operator Result<TData, TError>(Result.SuccessData<TData> data) => new Success<TData, TError>(data.Data);
-    public static implicit operator Result<TData, TError>(Result.FailureError<TError> error) => new Failure<TData, TError>(error.Error);
+    #region With Success Data
+
+    public record struct SuccessData<TData>(TData Data);
+    public record struct FailureError<TError>(TError Error);
+    public static SuccessData<TData> Success<TData>(TData data) => new(data);
+    public static FailureError<TError> Failure<TError>(TError error) => new(error);
+
+    #endregion
 }

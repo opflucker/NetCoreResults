@@ -1,7 +1,3 @@
----------------------------------------------
-
-Future changes:
-
 - Add Try(...) methods for calling code that can produce a value or an exception, and map them to a Result.
   Possible signatures:
     Result<D,Exception> Result.Try(Func<D> func);
@@ -18,5 +14,3 @@ Future changes:
 	if (result) ...
 
 - Add support for asyn delegates.
-
-- Success and Failure can be inner classes.

@@ -35,7 +35,7 @@ public class MapTests
     public void When_Use_FuncDataToData2_FuncErrorToError2_On_Success_Then_Success()
     {
         Result<int, string> result = 10;
-        Result<string, MappingError> mappedResult = result.Map(data => data.ToString(), error => new MappingError(error));
+        Result<string, MappingError> mappedResult = result.Map<Result<string, MappingError>>(data => data.ToString(), error => new MappingError(error));
         Assert.True(mappedResult.IsSuccess());
         Assert.Equal(mappedResult.Data, result.Data.ToString());
     }
