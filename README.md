@@ -4,8 +4,8 @@
 
 Minimal implementation of result monad, it is:
 
-- Minimal implementation code: Short but effective, holding the minimal required data, without using any conditional, easy to read and understand, with less change to bugs.
-- Minimal client boilerplate code: Less verbose and noisy, easy to read and understand, with less change to bugs.
+- Minimal implementation code: Short but effective, holding the minimal required data, without using any conditional, easy to read and understand.
+- Minimal client boilerplate code: Less verbose and noisy, easy to read and understand.
 
 Relevant design decisions:
 
@@ -13,8 +13,9 @@ Relevant design decisions:
 Chosen minimalism over efficiency. Structs are more efficient but introduce important limitations:
   - Structs have no inheritance, so the current design (classes Result, Success and Failure) can not be used.
 Use of inheritance allows a cleaner and shorter code, without using any conditional, and enable the use of 
-cast operator overloads that reduce client boilerplate code. Using an interface (like IResult) will allow 
-to use structs for types Success and Failure, but interfaces do not support cast operation overloads.
+cast operator overloads that reduce client boilerplate code.
+  - Inheritance problem can not be fixed with interfaces (implemented by structs) because they introduce boxing, 
+losing structs efficiency. Additionally, interfaces do not support cast operation overloads.
 
 - Some use cases are not implemented because they do not add significant advantages. In particular:
   - A result without success or failure data: This use case can be well covered returning a simple boolean.

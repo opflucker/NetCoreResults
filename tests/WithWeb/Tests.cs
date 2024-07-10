@@ -2,6 +2,9 @@
 
 namespace NetCoreResults.Tests.WithWeb;
 
+/// <summary>
+/// Simulate an scenario with a web api.
+/// </summary>
 public class Tests
 {
     [Fact]
