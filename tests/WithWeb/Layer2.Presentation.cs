@@ -1,13 +1,13 @@
-﻿// Asuming a solution with a well-defined presentation layer
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace NetCoreResults.Tests.WithWeb;
 
 public static class ResultExtensions
 {
-    // This is a common helper for web-applications that handle result monads
+    /// <summary>
+    /// Maps a monad result to AspNetCore IResult.
+    /// </summary>
     public static IActionResult ToActionResult<TData>(this Result<TData,ApplicationError> result)
         where TData : notnull
     {
@@ -41,11 +41,8 @@ public static class SomePresentationLayerService
 
 public static class PresentationLayer
 {
-    // This method represents an action-method of some web controller
     public static IActionResult GetEntity(string requesterName, string id)
-    {
-        return SomePresentationLayerService.EnsureAuthorization(requesterName)
+        => SomePresentationLayerService.EnsureAuthorization(requesterName)
             .MapSuccess(() => SomeApplicationService.FindById(id))
             .ToActionResult();
-    }
 }

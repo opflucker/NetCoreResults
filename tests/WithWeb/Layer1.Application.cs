@@ -35,6 +35,6 @@ public static class SomeApplicationService
 
         var result = SomeDomainService.GetById(id);
 
-        return result.MapFailure(_ => ApplicationError.Generic);
+        return result.MapFailure(_ => ApplicationError.Generic); // maps the error type from domain layer to application layer
     }
 }
