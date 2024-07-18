@@ -17,6 +17,8 @@ public abstract class Result<TData, TError>
     public static implicit operator Result<TData, TError>(TError error) => new Failure(error);
     public static implicit operator Result<TData, TError>(Result.SuccessData<TData> data) => new Success(data.Data);
     public static implicit operator Result<TData, TError>(Result.FailureError<TError> error) => new Failure(error.Error);
+    public static bool operator true(Result<TData, TError> result) => result.IsSuccess();
+    public static bool operator false(Result<TData, TError> result) => result.IsFailure();
 
     #endregion
 

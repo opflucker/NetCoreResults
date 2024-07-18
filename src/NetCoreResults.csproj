@@ -8,7 +8,6 @@
 
   <PropertyGroup>
     <PackageId>NetCoreResults</PackageId>
-    <Version>0.3.0</Version>
     <Authors>Otto Pflücker</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -17,7 +16,8 @@
     <Copyright>MIT</Copyright>
     <Description>Minimal result monad implementation.</Description>
     <PackageTags>functional csharp dotnet dotnetcore monad result result-type functional-programming</PackageTags>
-    <PackageReleaseNotes>Move Success and Failure implementation classes to inner classes.</PackageReleaseNotes>
+    <Version>0.4.0</Version>
+    <PackageReleaseNotes>Added implicit cast operators true/false.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

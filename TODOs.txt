@@ -9,8 +9,4 @@
     Result<E> Result.SuccessIf(Pred pred, E error);
     Result<D,E> Result<D1,E>.SuccessIf(Pred<D> pred, E error);
 
-- Add implicit overload to boolean, so client code can perform:
-    var result = ...;
-	if (result) ...
-
 - Add support for asyn delegates.
