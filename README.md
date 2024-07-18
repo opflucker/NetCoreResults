@@ -80,7 +80,22 @@ Result<Error> SomeBusinessLogic(string? entityId)
 }
 ```
 
-Use of getter `Error` can produce an exception if it is called with a success `Result`. A more secure alternative is:
+Implicit cast operators true/false are implemented, so we can use:
+
+```c#
+record Error(ErrorCodes Code, string Message);
+
+Result<Error> SomeBusinessLogic(string? entityId)
+{
+	var result = UpdateEntity(entityId);
+	if (!result)
+		return new Error(result.Error, "Failed to update entity");
+
+	return Result.Success();
+}
+```
+
+Use of getter `Error` can produce an exception if called with a success `Result`. A more secure alternative is:
 
 ```c#
 record Error(ErrorCodes Code, string Message);

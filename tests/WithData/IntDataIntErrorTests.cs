@@ -8,6 +8,7 @@ public class IntDataIntErrorTests
         int data = 10;
         Result<int, int> result = Result.Success(data);
 
+        Assert.True(result ? true : false);
         Assert.True(result.IsSuccess());
         Assert.False(result.IsFailure());
 
@@ -23,6 +24,7 @@ public class IntDataIntErrorTests
         Assert.Throws<InvalidOperationException>(() => result.Error);
 
         var trimmedResult = result.TrimSuccess();
+        Assert.True(trimmedResult ? true : false);
         Assert.True(trimmedResult.IsSuccess());
         Assert.False(trimmedResult.IsFailure());
         Assert.Throws<InvalidOperationException>(() => trimmedResult.Error);
@@ -34,6 +36,7 @@ public class IntDataIntErrorTests
         int error = 10;
         Result<int , int> result = Result.Failure(error);
 
+        Assert.False(result ? true : false);
         Assert.False(result.IsSuccess());
         Assert.True(result.IsFailure());
 
@@ -49,6 +52,7 @@ public class IntDataIntErrorTests
         Assert.Equal(error, result.Error);
 
         var trimmedResult = result.TrimSuccess();
+        Assert.False(trimmedResult ? true : false);
         Assert.False(trimmedResult.IsSuccess());
         Assert.True(trimmedResult.IsFailure());
         Assert.Equal(error, trimmedResult.Error);

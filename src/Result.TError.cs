@@ -13,6 +13,8 @@ public abstract class Result<TError>
 
     public static implicit operator Result<TError>(Result.SuccessNoData _) => Success.Unit;
     public static implicit operator Result<TError>(TError error) => new Failure(error);
+    public static bool operator true(Result<TError> result) => result.IsSuccess();
+    public static bool operator false(Result<TError> result) => result.IsFailure();
 
     #endregion
 
