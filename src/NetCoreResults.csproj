@@ -16,8 +16,8 @@
     <Copyright>MIT</Copyright>
     <Description>Minimal result monad implementation.</Description>
     <PackageTags>functional csharp dotnet dotnetcore monad result result-type functional-programming</PackageTags>
-    <Version>0.4.0</Version>
-    <PackageReleaseNotes>Added implicit cast operators true/false.</PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>Updated documentation and closed version 1.0.0.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

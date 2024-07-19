@@ -1,6 +1,6 @@
 ﻿namespace NetCoreResults;
 
-public static partial class ResultExtensions
+public static class ResultExtensions
 {
     #region No Success Data
 
