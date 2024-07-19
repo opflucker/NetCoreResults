@@ -45,16 +45,4 @@ public abstract class Result<TError>
     }
 
     #endregion
-
-    #region Extended interface
-
-    public Result<TError> OnSuccess(Action action) => On(action, (_) => { });
-    public Result<TError> OnFailure(Action<TError> action) => On(() => { }, action);
-
-    public Result<TError> MapSuccess(Func<Result<TError>> func) => Map(func, error => error);
-    public Result<TData, TError> MapSuccess<TData>(Func<Result<TData, TError>> func) => Map(func, error => error);
-    public Result<TError2> MapFailure<TError2>(Func<TError, Result<TError2>> func) => Map(() => Result.Success(), func);
-    public Result<TError2> MapFailure<TError2>(Func<TError, TError2> func) => Map<Result<TError2>>(() => Result.Success(), error => func(error));
-
-    #endregion
 }
