@@ -149,7 +149,7 @@ There are some groups of methods in types `Result<TError>` and `Result<TData,TEr
 - Getters: Properties `Data` and `Error`. They introduce a potencial invalid use case that can not be avoided at compile time.
 This use case corresponds to a program bug, so it is signaled at execution time throwing exception `InvalidOperationException`.
 
-- Simple validations: Methods `IsSuccess()` and `IsFailure()`.
+- Simple validations: Methods `IsSuccess()` and `IsFailure()`, and operators `true` and `false`.
 
 - Validations with extractions: Methods `IsSuccess(out TData data)` an `IsFailure(out TError error)`.
 Allow secure access to result internal data.
@@ -158,3 +158,73 @@ Allow secure access to result internal data.
   - Methods `On`, `OnSuccess` and `OnFailure`: Allow perform and action when result is success or failure without modifying the result.
   - Methods `Map`, `MapSuccess` and `MapFailure`: Allow perform a function producing a new result, potentially of a new type.
   - Method `TrimSuccess`: Creates an equivalent `Result<TError>` from a `Result<TData,TResult>`.
+
+## Extensions
+
+The spirit of this library is to be minimal, it is, include the bare minimum for handling result monads. Instead of including 
+large sets of methods (and they corresponding large sets of tests), this library encorage users to implement extensions when 
+needed. That said, an small set of extensions is included, so library users can used them and have a reference to implement more.
+
+Following are examples of extensions commonly included in other libraries and how they can be implemented.
+
+### Try extensions
+
+Extensions for calling code that can produce a value or an exception, and map them to a Result. A possible implementation could be:
+
+```c#
+public static class ResultExtensions
+{
+    #region No Success Data
+
+    public static Result<TError> Try<TException, TError>(Action action, Func<TException, TError> mapException)
+	where TException : Exception
+    {
+        try { action(); return Success(); }
+        catch (TException exception) { return mapException(exception); }
+    }
+
+    public static Result<TError> Try<TException, TError>(Func<Result<TError>> func, Func<TException, TError> mapException)
+	where TException : Exception
+    {
+        try { return func(); }
+        catch (TException exception) { return mapException(exception); }
+    }
+
+    #endregion
+
+    #region With Success Data
+
+    public static Result<TData, TError> Try<TData, TException, TError>(Func<Result<TData, TError>> func, Func<TException, TError> mapException)
+	where TException : Exception
+    {
+        try { return func(); }
+        catch (TException exception) { return mapException(exception); }
+    }
+
+    #endregion
+}
+```
+
+### SuccessIf extensions
+
+Extensions for calling a predicate and map it result to an object `Result<TError>`. A possible implementation could be:
+
+```c#
+public static class ResultExtensions
+{
+    public static Result<TError> SuccessIf<TError>(Func<bool> pred, TError error)
+		=> pred() ? Result.Success() : error;
+}
+```
+
+### Async extensions
+
+Extensions with method/lambda parameters that return tasks. A possible implementation could be:
+
+```c#
+public static class ResultExtensions
+{
+    public static Task<Result<TError>> MapSuccess<TError>(this Result<TError> result, Func<Task<Result<TError>>> func)
+        => result.Map(func, error => Task.FromResult<Result<TError>>(error));
+}
+```
